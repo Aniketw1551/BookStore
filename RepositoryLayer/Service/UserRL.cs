@@ -60,7 +60,7 @@ namespace RepositoryLayer.Service
             }
         }
 
-        public string GenerateJWTToken(string email)
+        public string GenerateJWTToken(string email, int UserId)
         {
             // header
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Configuration["Jwt:SecretKey"]));
@@ -69,7 +69,8 @@ namespace RepositoryLayer.Service
             // payload
             var claims = new[]
             {
-                new Claim("Email", email)
+                new Claim("Email", email),
+                new Claim("Id", UserId.ToString()),
             };
 
             // signature
@@ -100,13 +101,15 @@ namespace RepositoryLayer.Service
                     SqlDataReader reader = command.ExecuteReader();
                     if (reader.HasRows)
                     {
+                        int UserId = 0; 
                         while (reader.Read())
                         {
                             model.Email = Convert.ToString(reader["Email"] == DBNull.Value ? default : reader["Email"]);
+                            UserId = Convert.ToInt32(reader["UserId"] == DBNull.Value ? default : reader["UserId"]);
                             model.Password = Convert.ToString(reader["Password"] == DBNull.Value ? default : reader["Password"]);
                         }
                         sqlConnection.Close();
-                        var token = GenerateJWTToken(email);
+                        var token = GenerateJWTToken(email, UserId);
                         return token;
                     }
                     else
