@@ -43,6 +43,10 @@ namespace BookStore
             services.AddTransient<IAddressRL, AddressRL>();
             services.AddTransient<IWishlistBL, WishlistBL>();
             services.AddTransient<IWishlistRL, WishlistRL>();
+            services.AddTransient<IFeedbackBL, FeedbackBL>();
+            services.AddTransient<IFeedbackRL, FeedbackRL>();
+            services.AddTransient<IOrderBL, OrderBL>();
+            services.AddTransient<IOrderRL, OrderRL>();
 
             ////Adding Swagger in Services Collection.
             services.AddSwaggerGen(c =>

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BookStore.Controllers
@@ -13,7 +14,7 @@ namespace BookStore.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class CartController : ControllerBase
-    {
+    { 
         private readonly ICartBL cartBL;
 
         public CartController(ICartBL cartBL)
@@ -67,8 +68,8 @@ namespace BookStore.Controllers
             }
         }
 
-        [Authorize]
-        [HttpPut("Update")]
+       [Authorize]
+       [HttpPut("Update")]
         public IActionResult UpdateCart(Cart cartModel)
         {
             try
