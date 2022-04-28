@@ -1,4 +1,5 @@
-﻿using CommonLayer.Model;
+﻿using CommonLayer.Accounts;
+using CommonLayer.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using RepositoryLayer.Interface;
@@ -60,7 +61,7 @@ namespace RepositoryLayer.Service
             }
         }
 
-        public string GenerateJWTToken(string email, int UserId)
+        public string GenerateJWTToken(UserAccount userAccount)
         {
             // header
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Configuration["Jwt:SecretKey"]));
@@ -69,8 +70,9 @@ namespace RepositoryLayer.Service
             // payload
             var claims = new[]
             {
-                new Claim("Email", email),
-                new Claim("Id", UserId.ToString()),
+                new Claim(ClaimTypes.Role, "User"),
+                new Claim("Email", userAccount.Email),
+                new Claim("Id", userAccount.UserId.ToString()),
             };
 
             // signature
@@ -83,17 +85,14 @@ namespace RepositoryLayer.Service
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public string Login(string email, string password)
+        public UserAccount Login(string email, string password)
         {
             sqlConnection = new SqlConnection(this.Configuration.GetConnectionString("BookStoreDB"));
             try
             {
                 using (sqlConnection)
                 {
-                    UserModel model = new UserModel();
-
                     SqlCommand command = new SqlCommand("spUserLogin", sqlConnection);
-
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@Email", email);
                     command.Parameters.AddWithValue("@Password", password);
@@ -101,16 +100,16 @@ namespace RepositoryLayer.Service
                     SqlDataReader reader = command.ExecuteReader();
                     if (reader.HasRows)
                     {
-                        int UserId = 0; 
+                        UserAccount userAccount = new UserAccount();
                         while (reader.Read())
                         {
-                            model.Email = Convert.ToString(reader["Email"] == DBNull.Value ? default : reader["Email"]);
-                            UserId = Convert.ToInt32(reader["UserId"] == DBNull.Value ? default : reader["UserId"]);
-                            model.Password = Convert.ToString(reader["Password"] == DBNull.Value ? default : reader["Password"]);
+                            userAccount.Email = Convert.ToString(reader["Email"] == DBNull.Value ? default : reader["Email"]);
+                            userAccount.UserId = Convert.ToInt32(reader["UserId"] == DBNull.Value ? default : reader["UserId"]);
+                            userAccount.FullName = Convert.ToString(reader["FullName"] == DBNull.Value ? default : reader["FullName"]);
                         }
                         sqlConnection.Close();
-                        var token = GenerateJWTToken(email, UserId);
-                        return token;
+                        userAccount.Token = GenerateJWTToken(userAccount);
+                        return userAccount;
                     }
                     else
                     {

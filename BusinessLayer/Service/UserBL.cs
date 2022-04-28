@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Interface;
+using CommonLayer.Accounts;
 using CommonLayer.Model;
 using RepositoryLayer.Interface;
 using System;
@@ -28,7 +29,7 @@ namespace BusinessLayer.Service
             }
         }
 
-        public string Login(string email, string password)
+        public UserAccount Login(string email, string password)
         {
             try
             {

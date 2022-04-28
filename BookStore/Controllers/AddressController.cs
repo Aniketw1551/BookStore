@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace BookStore.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = Role.User)]
     [ApiController]
     public class AddressController : ControllerBase
     {
@@ -21,7 +22,6 @@ namespace BookStore.Controllers
             this.addressBL = addressBL;
         }
 
-        [Authorize]
         [HttpPost("Add")]
         public IActionResult AddAddress(AddressModel addressModel)
         {
@@ -44,7 +44,6 @@ namespace BookStore.Controllers
             }
         }
 
-        [Authorize]
         [HttpGet("{UserId}/Get")]
         public IActionResult GetAllAddresses()
         {
@@ -67,7 +66,6 @@ namespace BookStore.Controllers
             }
         }
 
-        [Authorize]
         [HttpPut("Update")]
         public IActionResult UpdateAddress(AddressModel addressModel, int addressId)
         {
@@ -90,7 +88,6 @@ namespace BookStore.Controllers
             }
         }
 
-        [Authorize]
         [HttpDelete("Delete")]
         public IActionResult DeleteAddress(int addressId)
         {

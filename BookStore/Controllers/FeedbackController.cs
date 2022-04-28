@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Interface;
 using CommonLayer.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,6 +21,7 @@ namespace BookStore.Controllers
             this.feedbackBL = feedbackBL;
         }
 
+        [Authorize(Roles = Role.User)]
         [HttpPost("Add")]
         public IActionResult AddFeedback(FeedbackModel feedbackModel)
         {
@@ -63,6 +65,7 @@ namespace BookStore.Controllers
             }
         }
 
+        [Authorize(Roles = Role.User)]
         [HttpPut("Update")]
         public IActionResult UpdateFeedback(FeedbackModel feedbackModel, int feedbackId)
         {
@@ -85,6 +88,7 @@ namespace BookStore.Controllers
             }
         }
 
+        [Authorize(Roles = Role.User)]
         [HttpPut("Delete")]
         public IActionResult DeleteFeedback(int feedbackId)
         {

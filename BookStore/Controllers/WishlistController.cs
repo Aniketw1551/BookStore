@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 namespace BookStore.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = Role.User)]
     [ApiController]
     public class WishlistController : ControllerBase
     {
@@ -20,7 +21,6 @@ namespace BookStore.Controllers
             this.wishlistBL = wishlistBL;
         }
 
-        [Authorize]
         [HttpPost("Add")]
         public IActionResult AddInWishlist(int bookId)
         {
@@ -43,7 +43,6 @@ namespace BookStore.Controllers
             }
         }
 
-        [Authorize]
         [HttpGet("{UserId}/Get")]
         public IActionResult GetAllWishlist()
         {
@@ -66,7 +65,6 @@ namespace BookStore.Controllers
             }
         }
 
-        [Authorize]
         [HttpDelete("Delete")]
         public IActionResult DeleteWishlist(int wishlistId)
         {

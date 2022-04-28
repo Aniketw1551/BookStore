@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Interface;
 using CommonLayer.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 namespace BookStore.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = Role.User)]
     [ApiController]
     public class OrderController : ControllerBase
     {

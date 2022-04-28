@@ -14,6 +14,12 @@ Description varchar(max) not null,
 BookImage varchar(250),
 BookQuantity int not null
 );
+
+Alter table Books 
+Add AdminId int not null Foreign key (AdminId) references Admins(AdminId) default 1;
+
+select * from Books
+
 ---------Stored Procedures for Books-----------
 
 ------Add Book Stored Procedure------

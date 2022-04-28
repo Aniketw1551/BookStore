@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 namespace BookStore.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles = Role.User)]
     [ApiController]
     public class CartController : ControllerBase
     { 
@@ -32,11 +33,11 @@ namespace BookStore.Controllers
                 var cartdetails = this.cartBL.AddCart(cart,userId);
                 if (cartdetails != null)
                 {
-                    return this.Ok(new { Success = true, message = " Book Added in cart Sucessfully", Response = cartdetails });
+                    return this.Ok(new { Success = true, message = " Book Added in Cart Sucessfully", Response = cartdetails });
                 }
                 else
                 {
-                    return this.BadRequest(new { Success = false, message = "Cart Add Failed" });
+                    return this.BadRequest(new { Success = false, message = "Book Add in Cart Failed" });
                 }
             }
             catch (Exception ex)

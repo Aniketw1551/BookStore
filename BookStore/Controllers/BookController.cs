@@ -3,9 +3,13 @@ using CommonLayer.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BookStore.Controllers
@@ -14,14 +18,20 @@ namespace BookStore.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
+        private readonly IMemoryCache memoryCache;
+
+        private readonly IDistributedCache distributedCache;
+
         private readonly IBookBL bookBL;
 
-        public BookController(IBookBL bookBL)
+        public BookController(IBookBL bookBL, IMemoryCache memoryCache, IDistributedCache distributedCache)
         {
             this.bookBL = bookBL;
+            this.memoryCache = memoryCache;
+            this.distributedCache = distributedCache;
         }
 
-        [Authorize]
+        [Authorize(Roles = Role.Admin)]
         [HttpPost("Add")]
         public IActionResult AddBook(AddBookModel addbook)
         {
@@ -43,7 +53,7 @@ namespace BookStore.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = Role.User)]
         [HttpGet("{bookId}/Get")]
         public IActionResult GetBookByBookId(int bookId)
         {
@@ -65,7 +75,7 @@ namespace BookStore.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = Role.User)]
         [HttpGet("Get")]
         public IActionResult GetAllBooks()
         {
@@ -88,6 +98,32 @@ namespace BookStore.Controllers
         }
 
         [Authorize]
+        [HttpGet("redis")]
+        public async Task<IActionResult> GetAllCustomersUsingRedisCache()
+        {
+            var cacheKey = "customerList";
+            string serializedCustomerList;
+            var customerList = new List<BookModel>();
+            var redisCustomerList = await distributedCache.GetAsync(cacheKey);
+            if (redisCustomerList != null)
+            {
+                serializedCustomerList = Encoding.UTF8.GetString(redisCustomerList);
+                customerList = JsonConvert.DeserializeObject<List<BookModel>>(serializedCustomerList);
+            }
+            else
+            {
+                customerList = (List<BookModel>)bookBL.GetAllBooks();
+                serializedCustomerList = JsonConvert.SerializeObject(customerList);
+                redisCustomerList = Encoding.UTF8.GetBytes(serializedCustomerList);
+                var options = new DistributedCacheEntryOptions()
+                    .SetAbsoluteExpiration(DateTime.Now.AddMinutes(10))
+                    .SetSlidingExpiration(TimeSpan.FromMinutes(2));
+                await distributedCache.SetAsync(cacheKey, redisCustomerList, options);
+            }
+            return Ok(customerList);
+        }
+
+        [Authorize(Roles = Role.Admin)]
         [HttpPut("Update")]
         public IActionResult UpdateBookDetails(BookModel bookModel)
         {
@@ -109,7 +145,7 @@ namespace BookStore.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = Role.Admin)]
         [HttpDelete("Delete")]
         public IActionResult DeleteBook(int bookId)
         {
