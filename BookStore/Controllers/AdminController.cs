@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Interface;
+using CommonLayer.CustomExceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -34,9 +35,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Success = false, message = "Please Enter Correct Credentials" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("Field can't be null");
             }
         }
     }

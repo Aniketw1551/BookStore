@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Interface;
+using CommonLayer.CustomExceptions;
 using CommonLayer.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -38,9 +39,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Status = false, Message = "Please Enter Correct BookId" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Status = false, Message = ex.Message });
+                throw new AppException("Field can't be null");
             }
         }
 
@@ -60,9 +61,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Status = false, Message = "Please Login First to VIew All Orders" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Status = false, ex.Message });
+                throw new KeyNotFoundException("User Not Found");
             }
         }
     }

@@ -1,4 +1,6 @@
 ﻿using BusinessLayer.Interface;
+using CommonLayer.CustomExceptions;
+using CommonLayer.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,9 +39,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Status = false, Message = result });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("Field can't be null");
             }
         }
 
@@ -59,9 +61,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Success = false, message = "Please Enter Correct User Id" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, response = ex.Message });
+                throw new AppException("Field can't be null");
             }
         }
 
@@ -80,9 +82,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Status = false, Message = "Error! Wishlist Delete Failed" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("Field can't be null");
             }
         }
     }

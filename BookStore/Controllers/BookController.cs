@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Interface;
+using CommonLayer.CustomExceptions;
 using CommonLayer.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -47,9 +48,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Success = false, message = "Error While Adding Book" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("Fields can't be null");
             }
         }
 
@@ -69,9 +70,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Success = false, message = "Error! Please Enter Correct Book Id" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("Field can't be null");
             }
         }
 
@@ -91,9 +92,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Success = false, message = "Error! Please Enter Correct Book Id" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new KeyNotFoundException("User Not Found");
             }
         }
 
@@ -139,9 +140,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Success = false, message = "Error! There was problem Updating the Book Details" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("Fields can't be null");
             }
         }
 
@@ -160,9 +161,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Success = false, message = "Please Enter Correct Book Id" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("Field can't be null");
             }
         }
     }

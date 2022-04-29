@@ -36,9 +36,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Success = false, message = "User Registration Failed" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("Fields can't be null");
             }
         }
 
@@ -57,9 +57,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Success = false, message = "Login Failed" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("Field Can't be null");
             }
         }
 
@@ -78,9 +78,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Success = false, message = "Failed to send token to given mail Id" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new KeyNotFoundException("Email Not Found");
             }
         }
 
@@ -100,9 +100,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Success = false, message = " Password Change Failed!!! Please Try Again Later " });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("New and Confirm Password Can't be Different");
             }
         }
     }

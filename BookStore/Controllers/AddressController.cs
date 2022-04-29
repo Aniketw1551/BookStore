@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Interface;
+using CommonLayer.CustomExceptions;
 using CommonLayer.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -38,9 +39,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Status = false, Response=address });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { status = false, Response = ex.Message });
+                throw new AppException("Fields can't be null");
             }
         }
 
@@ -60,9 +61,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Status = false, Message = "Error! Please Enter Correct User Id" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { status = false, Response = ex.Message });
+                throw new AppException("Field can't be null");
             }
         }
 
@@ -82,9 +83,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Status = false, Message = "Please Enter Correct AddressId or TypeId" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { status = false, Response = ex.Message });
+                throw new AppException("Fields can't be null");
             }
         }
 
@@ -103,9 +104,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Status = false, Message = "Please Enter Correct Address Id" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { status = false, Response = ex.Message });
+                throw new AppException("Field can't be null");
             }
         }
     }

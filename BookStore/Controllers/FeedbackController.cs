@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Interface;
+using CommonLayer.CustomExceptions;
 using CommonLayer.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -38,9 +39,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Status = false, Message = " Please Enter Correct BookId" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("Fields can't be null");
             }
         }
 
@@ -59,9 +60,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Status = false, Message = "Please Enter Correct BookId" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("Field can't be null");
             }
         }
 
@@ -82,9 +83,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Status = false, Message = result });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("Field can't be null");
             }
         }
 
@@ -104,9 +105,9 @@ namespace BookStore.Controllers
                     return this.BadRequest(new { Status = false, Message = "Error While Deleting Feedback" });
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return this.BadRequest(new { Success = false, message = ex.Message });
+                throw new AppException("Field can't be null");
             }
         }
     }
